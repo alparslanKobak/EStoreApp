@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace P013EStore.Core.Entities
 {
@@ -21,7 +15,7 @@ namespace P013EStore.Core.Entities
         [Display(Name = "Resim")]
         public string? Image { get; set; }
 
-        [Display(Name ="Fiyat")]
+        [Display(Name = "Fiyat")]
         public decimal Price { get; set; }
 
         [Display(Name = "Ürün Kodu")]
@@ -41,5 +35,11 @@ namespace P013EStore.Core.Entities
         public int CategoryId { get; set; }
         [Display(Name = "Kategori")]
         public Category? Category { get; set; }
+
+        [Display(Name = "Marka")]
+        public int BrandId { get; set; }
+
+        [Display(Name = "Marka")]
+        public Brand? Brand { get; set; }
     }
 }

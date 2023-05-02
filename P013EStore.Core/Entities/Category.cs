@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace P013EStore.Core.Entities
 {
@@ -35,6 +30,8 @@ namespace P013EStore.Core.Entities
         [Display(Name = "Eklenme Tarihi"),ScaffoldColumn(false)]
 
         public DateTime? CreateDate { get; set; } = DateTime.Now;
+
+        public List<Product>?  Products { get; set; }
 
     }
 }

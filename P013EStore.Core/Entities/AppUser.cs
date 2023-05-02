@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace P013EStore.Core.Entities
 {
@@ -15,7 +10,7 @@ namespace P013EStore.Core.Entities
         public string Name { get; set; }
         [Display(Name ="Soyad")]
         public string? Surname { get; set; }
-        [Display(Name ="Email")]
+        [Display(Name ="Email"),EmailAddress]
         public string Email { get; set; }
         [Display(Name = "Şifre")]
         public string Password { get; set; }

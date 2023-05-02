@@ -10,12 +10,12 @@ namespace P013EStore.Core.Entities
         public string Name { get; set; }
         [Display(Name = "Soyad")]
         public string? Surname { get; set; }
-        [Display(Name = "Email")]
+        [Display(Name = "Email"),EmailAddress]
         public string Email { get; set; }
 
         [Display(Name = "Telefon")]
         public string? Phone { get; set; }
-        [Display(Name = "Mesaj")]
+        [Display(Name = "Mesaj"),DataType(DataType.MultilineText)]
         public string Message { get; set; }
 
         [Display(Name = "Eklenme Tarihi"), ScaffoldColumn(false)]
