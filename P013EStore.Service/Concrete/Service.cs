@@ -9,6 +9,7 @@ namespace P013EStore.Service.Concrete
     {
         public Service(DatabaseContext context) : base(context)
         {
+
         }
     }
 }

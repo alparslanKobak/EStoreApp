@@ -25,6 +25,8 @@ namespace P013EStore.Data.Configurations
 
             // Category class'ı ile Products class'ı arasında 1'e çok ilişki vardır.
 
+           
+
         }
     }
 }

@@ -68,7 +68,7 @@ namespace P013EStore.Data.Concrete
             return await _dbSet.AsNoTracking().Where(expression).ToListAsync();
         }
 
-        public async Task<T> GetAsync(Expression<Func<T, bool>> expression)
+        public async Task<T> GetAsync(Expression<Func<T, bool>> expression)  // (Expression<Func<T, bool>> expression) Bu kullanım, lambda ifadelerini kullanabilmek için standart tanımlarımızı ifade eder.
         {
             return await _dbSet.FirstOrDefaultAsync(expression);
         }
