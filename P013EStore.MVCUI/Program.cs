@@ -1,6 +1,7 @@
 using P013EStore.Data;
 using P013EStore.Service.Abstract;
 using P013EStore.Service.Concrete;
+using Microsoft.AspNetCore.Authentication.Cookies; // Otrum iþlemleri için el ile eklendi..
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,18 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DatabaseContext>();
 
 builder.Services.AddTransient(typeof(IService<>),typeof(Service<>)); // Kendi yazdýðýmýz Db iþlemlerini yapan servisi .net core da bu þekilde MVC projesine servis olarak tanýtýyoruz ki kullanabilelim.
+
+builder.Services.AddTransient<IProductService, ProductService>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(x =>
+{
+    x.LoginPath = "/Admin/Login"; // oturum açmayan kullanýcýlarýn giriþ için gönderileceði adres
+    x.LogoutPath = "/Admin/Logout";
+    x.AccessDeniedPath = "/AccessDenied"; // yetkilendirme ile ekrana eriþim hakký olmayan kullanýcýlarýn gönderileceði sayfa
+    x.Cookie.Name = "Administrator"; // Oluþacak cookie'nin ismi
+    x.Cookie.MaxAge = TimeSpan.FromDays(1); // Oluþacak cookie'nin yaþam süresi ( 1 gün )
+
+}); // Uygulama admin paneli için admin yetkilendirme ayarlarý
 
 var app = builder.Build();
 
@@ -22,7 +35,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+
+app.UseAuthentication(); // Oturum açma iþlemine denk gelir.
+
+app.UseAuthorization(); // Oturum yetki sorgulama iþlemine denk gelir.
+
+// Dikkat! Önce UseAuthentication satýrý gelmeli sonra UseAuthorization 
+
 
 app.MapControllerRoute(
            name: "admin",
@@ -34,6 +53,8 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+// List<> yerine IEnumerable kullanmayý dene.
 
 
 // Programý çalýþtýrdýðýmýzda ilk önce add new project diyerek yeni bir libary filtresinden class projesi ekledik

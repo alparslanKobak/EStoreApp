@@ -3,52 +3,47 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using P013EStore.Core.Entities;
-using P013EStore.Data;
 using P013EStore.MVCUI.Utils;
 using P013EStore.Service.Abstract;
-using System.Drawing;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace P013EStore.MVCUI.Areas.Admin.Controllers
 {
     [Area("Admin"), Authorize]
 
-    public class CategoriesController : Controller
+    public class SliderController : Controller
     {
-        private readonly IService<Category> _service;
+        private readonly IService<Slider> _service;
 
-        public CategoriesController(IService<Category> service)
+        public SliderController(IService<Slider> service)
         {
             _service = service;
         }
 
-        // GET: CategoriesController
+        // GET: SliderController
         public async Task<ActionResult> Index()
         {
             var model = await _service.GetAllAsync();
             return View(model);
         }
 
-        // GET: CategoriesController/Details/5
+        // GET: SliderController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: CategoriesController/Create
-        public async Task<ActionResult> Create()
+        // GET: SliderController/Create
+        public ActionResult Create()
         {
-            var data = await _service.GetAllAsync();
-            ViewBag.ParentId = new SelectList(data,"Id","Name");
             return View();
         }
 
-        // POST: CategoriesController/Create
+        // POST: SliderController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Category collection, IFormFile? Image)
+        public async Task<ActionResult> Create(Slider collection, IFormFile? Image)
         {
-            
+
             try
             {
                 if (Image != null)
@@ -68,8 +63,8 @@ namespace P013EStore.MVCUI.Areas.Admin.Controllers
             }
         }
 
-        // GET: CategoriesController/Edit/5
-        public async Task<ActionResult> EditAsync(int? id)
+        // GET: SliderController/Edit/5
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null) // id gönderilmeden direkt edit sayfası açılırsa 
             {
@@ -86,12 +81,12 @@ namespace P013EStore.MVCUI.Areas.Admin.Controllers
             return View(model);
         }
 
-        // POST: CategoriesController/Edit/5
+        // POST: SliderController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(int id, Category collection, IFormFile? Image, bool? resmiSil)
+        public async Task<ActionResult> Edit(int id, Slider collection, IFormFile? Image, bool? resmiSil)
         {
-            
+
             try
             {
                 if (Image != null)
@@ -118,37 +113,27 @@ namespace P013EStore.MVCUI.Areas.Admin.Controllers
             }
         }
 
-        // GET: CategoriesController/Delete/5
-        public async Task<ActionResult> DeleteAsync(int? id)
+        // GET: SliderController/Delete/5
+        public async Task<ActionResult> Delete(int? id)
         {
-            if (id == null) // id gönderilmeden direkt edit sayfası açılırsa 
-            {
-                return BadRequest(); // geriye geçersiz istek hatası dön
-            }
-            var model = await _service.FindAsync(id.Value);
-            if (model == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            return View(model);
+            Slider model = await _service.FindAsync(id.Value);
+            return View();
         }
 
-        // POST: CategoriesController/Delete/5
+        // POST: SliderController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Category collection)
+        public async Task<ActionResult> Delete(int id, Slider collection)
         {
             try
             {
-                if (collection.Image!= null)
-                {
-                    FileHelper.FileRemover(collection.Image);
-                }
-                
                 _service.Delete(collection);
-                _service.Save();
-
+                 await _service.SaveAsync();
                 return RedirectToAction(nameof(Index));
             }
             catch

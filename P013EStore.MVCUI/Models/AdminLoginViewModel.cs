@@ -1,0 +1,20 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace P013EStore.MVCUI.Models
+{
+    public class AdminLoginViewModel
+    {
+        [Required(ErrorMessage =" {0} Boş Geçilemez! "),MaxLength(50)]
+
+        [Display(Name = "Email"), EmailAddress]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = " {0} Boş Geçilemez! ")]
+
+        [Display(Name = "Şifre"),DataType(DataType.Password),MaxLength(50),MinLength(3)]
+        public string Password { get; set; }
+
+        [ScaffoldColumn(false)]
+        public string? ReturnUrl { get; set; }
+    }
+}

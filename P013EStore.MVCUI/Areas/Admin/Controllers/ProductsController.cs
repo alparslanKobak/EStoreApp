@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using P013EStore.Core.Entities;
@@ -7,14 +8,15 @@ using P013EStore.Service.Abstract;
 
 namespace P013EStore.MVCUI.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin"), Authorize]
+
     public class ProductController : Controller
     {
-        private readonly IService<Product> _service; // readonly nesneler sadece constructor metotta doldurulabilir.
+        private readonly IProductService _service; // readonly nesneler sadece constructor metotta doldurulabilir.
         private readonly IService<Category> _serviceCategory;
         private readonly IService<Brand> _serviceBrand;
 
-        public ProductController(IService<Product> service, IService<Category> serviceCategory, IService<Brand> serviceBrand)
+        public ProductController(IProductService service, IService<Category> serviceCategory, IService<Brand> serviceBrand)
         {
             _service = service;
             _serviceCategory = serviceCategory;
@@ -30,7 +32,7 @@ namespace P013EStore.MVCUI.Areas.Admin.Controllers
         // GET: ProductsController
         public async Task<ActionResult> Index()
         {
-            var model = await _service.GetAllAsync();
+            var model = await _service.GetProductsByIncludeAsync();
             
             return View(model);
         }
@@ -80,39 +82,96 @@ namespace P013EStore.MVCUI.Areas.Admin.Controllers
         }
 
         // GET: ProductsController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> EditAsync(int? id)
         {
-            return View();
+            if (id == null) // id gönderilmeden direkt edit sayfası açılırsa 
+            {
+                return BadRequest(); // geriye geçersiz istek hatası dön
+            }
+
+            var model = await _service.GetProductByIncludeAsync(id.Value); // Yukarıdaki id'yi ? ile nullable yaparsak 
+
+            if (model == null)
+            {
+                return NotFound(); // kayıt bulunamadı
+            }
+            var data = await _serviceCategory.GetAllAsync();
+            ViewBag.CategoryId = new SelectList(data, "Id", "Name");
+
+            var data1 = await _serviceBrand.GetAllAsync();
+            ViewBag.BrandId = new SelectList(data1, "Id", "Name");
+
+            return View(model);
         }
 
         // POST: ProductsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> EditAsync(int id, Product collection, IFormFile Image, bool? resmiSil)
         {
             try
             {
+                if (Image != null)
+                {
+                    collection.Image = await FileHelper.FileLoaderAsync(Image);
+                }
+
+
+                if (resmiSil == true && resmiSil is not null && collection.Image is not null)
+                {
+                    FileHelper.FileRemover(collection.Image);
+                    collection.Image = null;
+                }
+                // Sunucudan tamamen dosya silme durumunu araştır.
+                _service.Update(collection);
+                await _service.SaveAsync();
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception e)
             {
-                return View();
+                ModelState.AddModelError("", "Hata oluştu : " + e.Message);
             }
+
+            var data = await _serviceCategory.GetAllAsync();
+            ViewBag.CategoryId = new SelectList(data, "Id", "Name");
+
+            var data1 = await _serviceBrand.GetAllAsync();
+            ViewBag.BrandId = new SelectList(data1, "Id", "Name");
+            return View();
         }
 
         // GET: ProductsController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int? id)
         {
-            return View();
+            if (id == null) // id gönderilmeden direkt edit sayfası açılırsa 
+            {
+                return BadRequest(); // geriye geçersiz istek hatası dön
+            }
+
+            var model = await _service.GetProductByIncludeAsync(id.Value); // Yukarıdaki id'yi ? ile nullable yaparsak 
+
+            if (model == null)
+            {
+                return NotFound(); // kayıt bulunamadı
+            }
+            var data = await _serviceCategory.GetAllAsync();
+            ViewBag.CategoryId = new SelectList(data, "Id", "Name");
+
+            var data1 = await _serviceBrand.GetAllAsync();
+            ViewBag.BrandId = new SelectList(data1, "Id", "Name");
+
+            return View(model);
         }
 
         // POST: ProductsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Product collection)
         {
             try
             {
+                _service.Delete(collection);
+                _service.Save();
                 return RedirectToAction(nameof(Index));
             }
             catch
