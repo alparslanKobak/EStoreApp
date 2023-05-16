@@ -24,6 +24,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 }); // Uygulama admin paneli için admin yetkilendirme ayarlarý
 
+builder.Services.AddAuthorization(x=>
+{
+    x.AddPolicy("AdminPolicy",p=> p.RequireClaim("Role","Admin")); // admin paneline giriþ yapma yetkisine sahip olanlarý bu kuralla kontrol edeceðiz.
+
+    x.AddPolicy("UserPolicy",p=> p.RequireClaim("Role","User")); // admin dýþýnda yetkilendirme kullanýrsak bu kuralý kullanabiliriz(Siteye üye giriþi yapanlarý ön yüzde bir panenle eriþtirme gibi)
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
