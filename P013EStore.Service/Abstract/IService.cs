@@ -10,6 +10,6 @@ namespace P013EStore.Service.Abstract
 {
     public interface IService<T> : IRepository<T> where T : class, IEntity, new()  // Where sonrası belirttiklerimiz, olması gereken, varsayılan şartları söyler.
     {
-
+       
     }
 }
