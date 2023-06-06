@@ -26,7 +26,15 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
         // GET: ProductsController
         public async Task<ActionResult> Index()
         {
-            var model = await _httpClient.GetFromJsonAsync<List<Product>>(_apiAdres);  // _httpClient nesnesi içindeki GetFromJsonAsync metodu kendisine verdiğimiz _apiAdres'deki URL'e get isteği gönderir ve oradan gelen json formatındaki app user listesini List<AppUser> nesnesine dönüştürür.
+
+
+            var data = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdresKategori);
+            ViewBag.CategoryId = new SelectList(data, "Id", "Name");
+
+            var data1 = await _httpClient.GetFromJsonAsync<List<Brand>>(_apiAdresMarka);
+            ViewBag.BrandId = new SelectList(data1, "Id", "Name");
+
+            var model = await _httpClient.GetFromJsonAsync<List<Product>>(_apiAdres); // _httpClient nesnesi içindeki GetFromJsonAsync metodu kendisine verdiğimiz _apiAdres'deki URL'e get isteği gönderir ve oradan gelen json formatındaki app user listesini List<AppUser> nesnesine dönüştürür.
 
             return View(model);
         }
@@ -40,10 +48,10 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
         // GET: ProductsController/Create
         public async Task<ActionResult> Create()
         {
-            var data = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdres); 
+            var data = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdresKategori); 
             ViewBag.CategoryId = new SelectList(data, "Id", "Name");
 
-            var data1 = await _httpClient.GetFromJsonAsync<List<Brand>>(_apiAdres); 
+            var data1 = await _httpClient.GetFromJsonAsync<List<Brand>>(_apiAdresMarka); 
             ViewBag.BrandId = new SelectList(data1, "Id", "Name");
             return View();
         }
@@ -71,12 +79,24 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
             {
                 ModelState.AddModelError("", "Hata Oluştu" + e.Message);
             }
+
+            var data = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdresKategori);
+            ViewBag.CategoryId = new SelectList(data, "Id", "Name");
+
+            var data1 = await _httpClient.GetFromJsonAsync<List<Brand>>(_apiAdresMarka);
+            ViewBag.BrandId = new SelectList(data1, "Id", "Name");
+
             return View(collection);
         }
 
         // GET: ProductsController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
+            var data = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdresKategori);
+            ViewBag.CategoryId = new SelectList(data, "Id", "Name");
+
+            var data1 = await _httpClient.GetFromJsonAsync<List<Brand>>(_apiAdresMarka);
+            ViewBag.BrandId = new SelectList(data1, "Id", "Name");
             var model = await _httpClient.GetFromJsonAsync<Product>(_apiAdres + "/" + id);
             return View(model);
         }
@@ -84,11 +104,14 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
         // POST: ProductsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, Product collection)
+        public async Task<ActionResult> Edit(int id,Product collection, IFormFile? Image)
         {
             try
             {
-
+                if (Image != null)
+                {
+                    collection.Image = await FileHelper.FileLoaderAsync(Image);
+                }
                 var response = await _httpClient.PutAsJsonAsync(_apiAdres, collection);  // Veriyi Json'a çevirip verilen adrese yolladık.
 
                 if (response.IsSuccessStatusCode) // Api'den başarılı istek kodu geldiyse...
@@ -100,23 +123,34 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
             {
                 ModelState.AddModelError("", "Hata Oluştu" + e.Message);
             }
-            return View();
+            var data = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdresKategori);
+            ViewBag.CategoryId = new SelectList(data, "Id", "Name");
+
+            var data1 = await _httpClient.GetFromJsonAsync<List<Brand>>(_apiAdresMarka);
+            ViewBag.BrandId = new SelectList(data1, "Id", "Name");
+            return View(collection);
         }
 
         // GET: ProductsController/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            var model = await _httpClient.GetFromJsonAsync<Contact>(_apiAdres + "/" + id);
+            var model = await _httpClient.GetFromJsonAsync<Product>(_apiAdres + "/" + id);
             return View(model);
         }
 
         // POST: ProductsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteAsync(int id, Product collection)
+        public async Task<ActionResult> Delete(int id, Product collection)
         {
             try
             {
+                if (collection.Image is not null)
+                {
+                    FileHelper.FileRemover(collection.Image);
+
+                }
+
                 await _httpClient.DeleteAsync(_apiAdres + "/" + id);
                 return RedirectToAction(nameof(Index));
             }
