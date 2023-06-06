@@ -13,10 +13,22 @@ namespace P013EStore.MVCUI.Controllers
         {
             _serviceProduct = serviceProduct;
         }
-
+        [Route("tum-urunlerimiz")] // adres çubuğundan tum-urunlerimiz yazınca bu action çalışsın
         public async Task<IActionResult> Index()
         {
             IEnumerable<Product> model = await _serviceProduct.GetAllAsync(p=> p.Isactive);
+
+            return View(model);
+        }
+        
+        public async Task<IActionResult> Search(string? q) // Adres çubuğunda query string ile 
+        {
+
+            if (q== null)
+            {
+                return View();
+            }
+            IEnumerable<Product> model = await _serviceProduct.GetProductsByIncludeAsync(p=> p.Isactive && p.Name.Contains(q) || p.Name.Contains(q) || p.Description.Contains(q) || p.Brand.Name.Contains(q) || p.Category.Name.Contains(q));
 
             return View(model);
         }
@@ -32,11 +44,12 @@ namespace P013EStore.MVCUI.Controllers
             ProductDetailViewModel model = new();
 
             Product product = await _serviceProduct.GetProductByIncludeAsync(id.Value);
+
             model.Product = product;
 
-            model.RelatedProducts = await _serviceProduct.GetAllAsync(P=> P.CategoryId == product.CategoryId);
+            model.RelatedProducts = await _serviceProduct.GetAllAsync(P=> P.CategoryId == product.CategoryId && P.Id != id);
 
-            model.Product = await _serviceProduct.GetProductByIncludeAsync(id.Value);
+           
 
             
 

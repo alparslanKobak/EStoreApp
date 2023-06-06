@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using P013EStore.Core.Entities;
 using P013EStore.MVCUI.Models;
+using P013EStore.MVCUI.Utils;
 using P013EStore.Service.Abstract;
 using System.Diagnostics;
 
@@ -10,11 +11,13 @@ namespace P013EStore.MVCUI.Controllers
     {
         private readonly IService<Slider> _serviceSlider;
         private readonly IService<Product> _serviceProduct; // Eğer sonradan eklendiyse add parameters to denir.
+        private readonly IService<Contact> _serviceContact;
 
-        public HomeController(IService<Slider> serviceSlider, IService<Product> serviceProduct)
+        public HomeController(IService<Slider> serviceSlider, IService<Product> serviceProduct, IService<Contact> serviceContact)
         {
             _serviceSlider = serviceSlider;
             _serviceProduct = serviceProduct;
+            _serviceContact = serviceContact;
         }
 
         public async Task<IActionResult> Index()
@@ -34,6 +37,40 @@ namespace P013EStore.MVCUI.Controllers
         {
             return View();
         }
+        [Route("iletisim")]
+        public IActionResult ContactUs()
+        {
+            return View();
+        }
+
+        [Route("iletisim"),HttpPost]
+        public async Task<IActionResult> ContactUs(Contact contact)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _serviceContact.AddAsync(contact);
+                  var sonuc =  await _serviceContact.SaveAsync();
+                    // sonuc kısmı int bir değer döndürür. Eğer -1 ise hatalı, 0'dan büyük ise başarılıdır.
+
+                    if (sonuc >0)
+                    {
+                     //   await MailHelper.SendMailAsync(contact); // gelen mesajı mail gönder.
+                        TempData["Message"] = "<div class='alert alert-success' > Mesajınız Gönderilmiştir! Teşekkürler... </div>";
+                    }
+
+                    return RedirectToAction("ContactUs");
+                }
+                catch (Exception e)
+                {
+
+                    ModelState.AddModelError("","Hata Oluştu!" + e.Message);
+                }
+            }
+            return View();
+        }
+
         [Route("AccessDenied")] // AccessDenied hatası sayfası için bir view tasarlamamız gereklidir
         public IActionResult AccessDenied() // Erişim engeli
         {

@@ -14,9 +14,9 @@ namespace P013EStore.MVCUI.Areas.Admin.Controllers
     {
         private readonly IProductService _service; // readonly nesneler sadece constructor metotta doldurulabilir.
         private readonly IService<Category> _serviceCategory;
-        private readonly IService<Brand> _serviceBrand;
+        private readonly IService<Category> _serviceBrand;
 
-        public ProductController(IProductService service, IService<Category> serviceCategory, IService<Brand> serviceBrand)
+        public ProductController(IProductService service, IService<Category> serviceCategory, IService<Category> serviceBrand)
         {
             _service = service;
             _serviceCategory = serviceCategory;

@@ -15,7 +15,7 @@ namespace P013EStore.Data
         // Katmanlı mimaride bir proje katmanından başka bir katmana erişebilmek için Bulunduğumuz Data projesinin Dependencies kısmına sağ tıklayıp > Add Project References diyerek açılan pencereden Core projesine tik atıp ok diyerek pencereyi kapatmanız gerekiyor.
 
         public DbSet<AppUser> AppUsers { get; set; }
-        public DbSet<Brand> Brands { get; set; }
+        public DbSet<Category> Brands { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Product> Products { get; set; }
