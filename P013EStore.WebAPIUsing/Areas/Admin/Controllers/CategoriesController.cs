@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using P013EStore.Core.Entities;
@@ -8,7 +9,7 @@ using System.Reflection;
 namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
 {
 
-    [Area("Admin")]
+    [Area("Admin"), Authorize(Policy = "AdminPolicy")]
 
     public class CategoriesController : Controller
     {

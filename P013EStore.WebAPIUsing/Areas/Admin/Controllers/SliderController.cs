@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using P013EStore.Core.Entities;
 using P013EStore.WebAPIUsing.Utils;
 
 namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin"), Authorize(Policy = "AdminPolicy")]
     public class SliderController : Controller
     {
         private readonly HttpClient _httpClient;
@@ -66,39 +67,68 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
         }
 
         // GET: SliderController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var model = await _httpClient.GetFromJsonAsync<Slider>(_apiAdres + "/" + id); // Json formatındaki slash işareti kullanımı dolayısıyla / kullandık.
+            return View(model);
         }
 
         // POST: SliderController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, Slider collection, IFormFile Image, bool? resmiSil)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (resmiSil == true && resmiSil is not null && collection.Image is not null)
+                {
+                    FileHelper.FileRemover(collection.Image);
+                    collection.Image = null;
+                }
+
+                if (Image != null)
+                {
+                    collection.Image = await FileHelper.FileLoaderAsync(Image);
+
+                }
+                var response = await _httpClient.PutAsJsonAsync(_apiAdres, collection);  // Veriyi Json'a çevirip verilen adrese yolladık.
+
+                if (response.IsSuccessStatusCode) // Api'den başarılı istek kodu geldiyse...
+                {
+                    return RedirectToAction(nameof(Index));
+
+                }
+                
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                ModelState.AddModelError("", "Hata Oluştu  : " + e.Message);
             }
+            return View();
         }
 
         // GET: SliderController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
+            var model = await _httpClient.GetFromJsonAsync<Slider>(_apiAdres + "/" + id); // Json formatındaki slash işareti kullanımı dolayısıyla / kullandık.
+            return View(model);
         }
 
         // POST: SliderController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, Slider collection)
         {
             try
             {
+                if (collection.Image is not null)
+                {
+                    FileHelper.FileRemover(collection.Image);
+
+                }
+
+                await _httpClient.DeleteAsync(_apiAdres + "/" + id);
+
                 return RedirectToAction(nameof(Index));
             }
             catch

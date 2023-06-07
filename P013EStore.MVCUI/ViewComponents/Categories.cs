@@ -15,7 +15,7 @@ namespace P013EStore.MVCUI.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View(await _service.GetAllAsync());
+            return View();
         }
        
     }
