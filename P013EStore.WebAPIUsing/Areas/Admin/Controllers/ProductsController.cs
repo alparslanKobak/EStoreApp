@@ -11,28 +11,24 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
     {
         private readonly HttpClient _httpClient;
 
-        public ProductsController(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-        }
-
-
         private readonly string _apiAdres = "https://localhost:7011/api/Products";
 
         private readonly string _apiAdresKategori = "https://localhost:7011/api/Categories";
 
         private readonly string _apiAdresMarka = "https://localhost:7011/api/Brands";
 
+        public ProductsController(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
+
         // GET: ProductsController
         public async Task<ActionResult> Index()
         {
 
 
-            var data = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdresKategori);
-            ViewBag.CategoryId = new SelectList(data, "Id", "Name");
-
-            var data1 = await _httpClient.GetFromJsonAsync<List<Brand>>(_apiAdresMarka);
-            ViewBag.BrandId = new SelectList(data1, "Id", "Name");
+           
 
             var model = await _httpClient.GetFromJsonAsync<List<Product>>(_apiAdres); // _httpClient nesnesi içindeki GetFromJsonAsync metodu kendisine verdiğimiz _apiAdres'deki URL'e get isteği gönderir ve oradan gelen json formatındaki app user listesini List<AppUser> nesnesine dönüştürür.
 
@@ -86,7 +82,7 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
             var data1 = await _httpClient.GetFromJsonAsync<List<Brand>>(_apiAdresMarka);
             ViewBag.BrandId = new SelectList(data1, "Id", "Name");
 
-            return View(collection);
+            return View();
         }
 
         // GET: ProductsController/Edit/5
@@ -128,7 +124,7 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
 
             var data1 = await _httpClient.GetFromJsonAsync<List<Brand>>(_apiAdresMarka);
             ViewBag.BrandId = new SelectList(data1, "Id", "Name");
-            return View(collection);
+            return View();
         }
 
         // GET: ProductsController/Delete/5

@@ -12,7 +12,7 @@
             <ul class="dropdown-menu">
                
 
-                @foreach (Category altKategori in Model.Where(x=> x.IsActive && x.IsTopMenu && x.ParentId == anaKategori.ParentId))
+                @foreach (var altKategori in Model.Where(x=> x.IsActive && x.IsTopMenu && x.ParentId == anaKategori.ParentId))
                 {
                     <li><a class="dropdown-item" href="/Categories/Index/@altKategori.Id">@altKategori.Name</a></li>
                 }

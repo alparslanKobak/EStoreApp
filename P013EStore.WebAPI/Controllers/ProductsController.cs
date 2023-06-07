@@ -45,7 +45,7 @@ namespace P013EStore.WebAPI.Controllers
 
         // PUT api/<ProductsController>/5
         [HttpPut]
-        public async Task<IActionResult> Put(int id, [FromBody] Product value)
+        public async Task<IActionResult> Put([FromBody] Product value)
         {
             _service.Update(value);
           var sonuc =  await _service.SaveAsync();
@@ -55,7 +55,8 @@ namespace P013EStore.WebAPI.Controllers
                 return Ok(value);
             }
 
-            return Problem();
+            return Problem(); // Problem olduğunu belirten metod
+
         }
 
         // DELETE api/<ProductsController>/5

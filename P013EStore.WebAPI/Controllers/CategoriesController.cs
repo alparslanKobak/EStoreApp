@@ -34,27 +34,27 @@ namespace P013EStore.WebAPI.Controllers
 
         // POST api/<CategoriesController>
         [HttpPost]
-        public async Task<Category> Post([FromBody] Category value) // FromQuery = query string ile ...
+        public async Task<int> Post([FromBody] Category value) // FromQuery = query string ile ...
         {
             await _service.AddAsync(value);
-            await _service.SaveAsync();
 
-            return value;
+
+            return await _service.SaveAsync();
         }
 
         // PUT api/<CategoriesController>/5
         [HttpPut] // [HttpPut("{id}")] orijinali idi.. Güncellemede id yollamak zorunda kalmadık.
-        public async Task<ActionResult> Put(int id, [FromBody] Category value)
+        public async Task<int> Put([FromBody] Category value)
         {
             _service.Update(value);
            int sonuc= await _service.SaveAsync();
 
             if (sonuc > 0)
             {
-                return Ok();
+                return sonuc;
             }
 
-            return StatusCode(StatusCodes.Status304NotModified);
+            return 304;
         }
 
         // DELETE api/<CategoriesController>/5
@@ -72,7 +72,7 @@ namespace P013EStore.WebAPI.Controllers
 
             await _service.SaveAsync();
 
-            return Ok();
+            return Ok(kayit);
         }
     }
 }

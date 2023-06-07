@@ -7,10 +7,16 @@ using System.Reflection;
 
 namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
 {
+
     [Area("Admin")]
+
     public class CategoriesController : Controller
     {
+
         private readonly HttpClient _httpClient;
+
+        private readonly string _apiAdres = "https://localhost:7011/api/Categories"; //Api adresini web api projesini çalıştırdığımızda adres çubuğundan veya herhangi bir controller'a istek atarak RequestURL kısmından veya web api projesinde Properties altındaki launchSettings.json 
+
 
         public CategoriesController(HttpClient httpClient)
         {
@@ -18,7 +24,6 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
         }
 
 
-        private readonly string _apiAdres = "https://localhost:7011/api/Categories"; //Api adresini web api projesini çalıştırdığımızda adres çubuğundan veya herhangi bir controller'a istek atarak RequestURL kısmından veya web api projesinde Properties altındaki launchSettings.json 
 
         // GET: CategoriesController
         public async Task<ActionResult> Index()
@@ -37,8 +42,8 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
         // GET: CategoriesController/Create
         public async Task<ActionResult> Create()
         {
-            var data = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdres);
 
+            var data = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdres);
             ViewBag.ParentId = new SelectList(data, "Id", "Name");
             return View();
         }
@@ -90,6 +95,11 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
         {
             try
             {
+                if (resmiSil == true && resmiSil is not null && collection.Image is not null)
+                {
+                    FileHelper.FileRemover(collection.Image);
+                    collection.Image = null;
+                }
 
                 if (Image != null)
                 {
@@ -97,11 +107,6 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
                 }
 
 
-                if (resmiSil == true && resmiSil is not null && collection.Image is not null)
-                {
-                    FileHelper.FileRemover(collection.Image);
-                    collection.Image = null;
-                }
 
                 var response = await _httpClient.PutAsJsonAsync(_apiAdres, collection);  // Veriyi Json'a çevirip verilen adrese yolladık.
 

@@ -10,12 +10,13 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
     {
         private readonly HttpClient _httpClient; // _httpClient nesnesini kullanarak api lere istek gönderebiliriz.
 
+        private readonly string _apiAdres = "https://localhost:7011/api/Brands"; //Api adresini web api projesini çalıştırdığımızda adres çubuğundan veya herhangi bir controller'a istek atarak RequestURL kısmından veya web api projesinde Properties altındaki launchSettings.json 
+      
         public BrandsController(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
-        private readonly string _apiAdres = "https://localhost:7011/api/Brands"; //Api adresini web api projesini çalıştırdığımızda adres çubuğundan veya herhangi bir controller'a istek atarak RequestURL kısmından veya web api projesinde Properties altındaki launchSettings.json 
 
         // GET: BrandsController
         public async Task<ActionResult> Index()
@@ -56,7 +57,7 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                return RedirectToAction(nameof(Index));
+                
             }
             catch (Exception e)
             {
@@ -69,7 +70,7 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
         // GET: BrandsController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var model = await _httpClient.GetFromJsonAsync<Category>(_apiAdres + "/" + id); // Json formatındaki slash işareti kullanımı dolayısıyla / kullandık.
+            var model = await _httpClient.GetFromJsonAsync<Brand>(_apiAdres + "/" + id); // Json formatındaki slash işareti kullanımı dolayısıyla / kullandık.
             return View(model);
         }
 
@@ -80,17 +81,18 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
         {
             try
             {
-                if (Logo != null)
-                {
-                    collection.Logo = await FileHelper.FileLoaderAsync(Logo);
-                }
-
 
                 if (resmiSil == true && resmiSil is not null && collection.Logo is not null)
                 {
                     FileHelper.FileRemover(collection.Logo);
                     collection.Logo = null;
                 }
+
+                if (Logo != null)
+                {
+                    collection.Logo = await FileHelper.FileLoaderAsync(Logo);
+                }
+
 
                 var response = await _httpClient.PutAsJsonAsync(_apiAdres, collection);  // Veriyi Json'a çevirip verilen adrese yolladık.
 
@@ -110,7 +112,7 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
         // GET: BrandsController/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            var model = await _httpClient.GetFromJsonAsync<Category>(_apiAdres + "/" + id); // Json formatındaki slash işareti kullanımı dolayısıyla / kullandık.
+            var model = await _httpClient.GetFromJsonAsync<Brand>(_apiAdres + "/" + id); // Json formatındaki slash işareti kullanımı dolayısıyla / kullandık.
             return View(model);
         }
 

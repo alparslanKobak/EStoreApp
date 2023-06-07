@@ -2,7 +2,6 @@
 using P013EStore.Core.Entities;
 using P013EStore.Service.Abstract;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace P013EStore.WebAPI.Controllers
 {
@@ -12,29 +11,29 @@ namespace P013EStore.WebAPI.Controllers
     public class BrandsController : ControllerBase
     {
 
-        private readonly IService<Category> _service; // readonly nesneler sadece constructor metotta doldurulabilir.
+        private readonly IService<Brand> _service; // readonly nesneler sadece constructor metotta doldurulabilir.
 
-        public BrandsController(IService<Category> service)
+        public BrandsController(IService<Brand> service)
         {
             _service = service;
         }
         // GET: api/<BrandsController>
         [HttpGet]
-        public async Task<IEnumerable<Category>> Get()
+        public async Task<IEnumerable<Brand>> Get()
         {
             return await _service.GetAllAsync();
         }
 
         // GET api/<BrandsController>/5
         [HttpGet("{id}")]
-        public async Task<Category> Get(int id)
+        public async Task<Brand> Get(int id)
         {
             return await _service.FindAsync(id);
         }
 
         // POST api/<BrandsController>
         [HttpPost]
-        public async Task<Category> Post([FromBody] Category value)
+        public async Task<Brand> Post([FromBody] Brand value)
         {
             await _service.AddAsync(value);
             await _service.SaveAsync();
@@ -43,7 +42,7 @@ namespace P013EStore.WebAPI.Controllers
 
         // PUT api/<BrandsController>/5
         [HttpPut]
-        public async Task<ActionResult> Put(int id, [FromBody] Category value)
+        public async Task<ActionResult> Put(int id, [FromBody] Brand value)
         {
                 // ActionResult ile, geriye işlemin başarılı olup olmadığına dair değer döndürdük.
 
@@ -74,7 +73,7 @@ namespace P013EStore.WebAPI.Controllers
 
             await _service.SaveAsync();
 
-            return Ok();
+            return Ok(kayit);
         }
     }
 }

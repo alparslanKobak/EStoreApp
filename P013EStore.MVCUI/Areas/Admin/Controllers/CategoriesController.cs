@@ -94,17 +94,18 @@ namespace P013EStore.MVCUI.Areas.Admin.Controllers
             
             try
             {
-                if (Image != null)
-                {
-                    collection.Image = await FileHelper.FileLoaderAsync(Image);
-                }
-
 
                 if (resmiSil == true && resmiSil is not null && collection.Image is not null)
                 {
                     FileHelper.FileRemover(collection.Image);
                     collection.Image = null;
                 }
+
+                if (Image != null)
+                {
+                    collection.Image = await FileHelper.FileLoaderAsync(Image);
+                }
+               
                 // Sunucudan tamamen dosya silme durumunu araştır.
                 _service.Update(collection);
                 await _service.SaveAsync();
