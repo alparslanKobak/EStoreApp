@@ -68,5 +68,12 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
            
             return View(adminLoginViewModel);
         }
+
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return Redirect("/Admin/Login");
+        }
     }
 }

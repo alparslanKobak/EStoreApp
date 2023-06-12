@@ -32,6 +32,15 @@ namespace P013EStore.WebAPI.Controllers
             return await _service.GetProductByIncludeAsync(id);
         }
 
+        [HttpGet("GetSearch/{q}")]
+        public async Task<IEnumerable<Product>> GetSearch(string q)
+        {
+            var model = _service.GetProductsByIncludeAsync(p => p.Isactive && p.Name.Contains(q) || p.Name.Contains(q) || p.Description.Contains(q) || p.Brand.Name.Contains(q) || p.Category.Name.Contains(q));
+
+            
+            return await _service.GetProductsByIncludeAsync();
+        }
+
         // POST api/<ProductsController>
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] Product value)

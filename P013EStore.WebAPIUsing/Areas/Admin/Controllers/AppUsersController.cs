@@ -55,7 +55,7 @@ namespace P013EStore.WebAPIUsing.Areas.Admin.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                return RedirectToAction(nameof(Index));
+                
             }
             catch (Exception e)
             {

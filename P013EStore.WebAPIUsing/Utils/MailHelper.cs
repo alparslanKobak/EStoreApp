@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Mail;
 
-namespace P013EStore.MVCUI.Utils
+namespace P013EStore.WebAPIUsing.Utils
 {
     public class MailHelper
     {

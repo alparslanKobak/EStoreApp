@@ -17,6 +17,8 @@ builder.Services.AddTransient(typeof(IService<>),typeof(Service<>)); // Kendi ya
 
 builder.Services.AddTransient<IProductService, ProductService>(); // Product için yazdýðýmýz özel servisi uygulamaya tanýttýk. AddTransient yöntemiyle servis eklediðimizde sistem uygulamayý çalýþtýrdýðýmda hazýrda ayný nesne varsa o kullanýlýr yoksa yeni bir nesne oluþturulup kullanýma sunulur.
 
+builder.Services.AddTransient<ICategoryService, CategoryService>();
+
 //builder.Services.AddSingleton<IProductService, ProductService>(); // AddSingleton yöntemiyle servis eklediðimizde sistem uygulamayý çalýþtýrdýðýnda bu nesneden 1 tane üretir ve her istekte ayný nesne gönderilir. Performans olarak diðerlerinden iyi yöntemdir.
 
 //builder.Services.AddScoped<IProductService, ProductService>();  // AddScoped yöntemiyle servis eklediðimizde sistem uygulamayý çalýþtýrdýðýnda bu nesneye gelen her istek için ayrý ayrý nesneler üretip bunu kullanýma sunar. Ýçeriðin çok dinamik þekilde sürekli deðiþtiði projelerde kullanýlabilir.( Döviz altýn fiyatý gibi anlýk deðiþimlerin olduðu projelerde...)

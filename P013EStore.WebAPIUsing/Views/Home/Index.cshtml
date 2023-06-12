@@ -1,8 +1,40 @@
-﻿@{
+﻿@model HomePageViewModel
+
+@*Bir sayfada birden fazla model kullanabilmek için bir model listesi classı oluşturduk. HomePageViewModel olarak adlandırdık. Böylelikle aynı sayfada Sliders ve Product gibi birden fazla ürün çağırabiliriz.*@
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
+<partial name="_Slider" model="Model.Sliders" />
+
+
+@*Layouttaki scripts sectionunu ekledik
+
+- İlk slider kısmına active eklemek adına script kullandık
+*@
+@section Scripts{
+    <script>
+        $(".carousel-item:first").addClass("active")
+    </script>
+
+}
+
+
+
+
+
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Popüler Ürünlerimiz'</h1>
+
 </div>
+
+<section class="py-1">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-c@ontent-center">
+           
+            <partial name="_ProductPartial" model="Model.Products"/>
+           
+        </div>
+    </div>
+</section>

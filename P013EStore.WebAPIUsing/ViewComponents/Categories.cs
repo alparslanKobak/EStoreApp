@@ -2,7 +2,7 @@
 using P013EStore.Core.Entities;
 
 
-namespace P013EStore.MVCUI.ViewComponents
+namespace P013EStore.WebAPIUsing.ViewComponents
 {
     public class Categories : ViewComponent
     {
@@ -16,7 +16,7 @@ namespace P013EStore.MVCUI.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await _httpClient.GetFromJsonAsync<List<Contact>>(_apiAdres);
+            var model = await _httpClient.GetFromJsonAsync<List<Categories>>(_apiAdres);
             return View(model);
         }
 
