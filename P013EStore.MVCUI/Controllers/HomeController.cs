@@ -12,12 +12,16 @@ namespace P013EStore.MVCUI.Controllers
         private readonly IService<Slider> _serviceSlider;
         private readonly IService<Product> _serviceProduct; // Eğer sonradan eklendiyse add parameters to denir.
         private readonly IService<Contact> _serviceContact;
+        private readonly IService<News> _serviceNews;
+        private readonly IService<Brand> _serviceBrands;
 
-        public HomeController(IService<Slider> serviceSlider, IService<Product> serviceProduct, IService<Contact> serviceContact)
+        public HomeController(IService<Slider> serviceSlider, IService<Product> serviceProduct, IService<Contact> serviceContact, IService<News> serviceNews, IService<Brand> serviceBrands)
         {
             _serviceSlider = serviceSlider;
             _serviceProduct = serviceProduct;
             _serviceContact = serviceContact;
+            _serviceNews = serviceNews;
+            _serviceBrands = serviceBrands;
         }
 
         public async Task<IActionResult> Index()
@@ -25,7 +29,10 @@ namespace P013EStore.MVCUI.Controllers
             var model = new HomePageViewModel()
             {
                 Sliders = await _serviceSlider.GetAllAsync(),
-                Products = await _serviceProduct.GetAllAsync(p=> p.IsHome && p.Isactive)
+                Products = await _serviceProduct.GetAllAsync(p=> p.IsHome && p.Isactive),
+                Brands = await _serviceBrands.GetAllAsync(b=> b.IsActive),
+                News = await _serviceNews.GetAllAsync(b=> b.IsActive && b.IsHome)
+                
             };
                 
                 // await _serviceSlider.GetAllAsync();

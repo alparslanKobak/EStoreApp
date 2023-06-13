@@ -7,6 +7,8 @@ namespace P013EStore.MVCUI.Models
         public IEnumerable<Slider>? Sliders { get; set; }
        
         public IEnumerable<Product>? Products { get; set; }
+        public IEnumerable<Brand>? Brands { get; set; }
+        public IEnumerable<News>? News { get; set; }
 
        
     }

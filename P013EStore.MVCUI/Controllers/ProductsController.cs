@@ -13,7 +13,7 @@ namespace P013EStore.MVCUI.Controllers
         {
             _serviceProduct = serviceProduct;
         }
-        [Route("tum-urunlerimiz")] // adres çubuğundan tum-urunlerimiz yazınca bu action çalışsın
+        // [Route("tum-urunlerimiz")] // adres çubuğundan tum-urunlerimiz yazınca bu action çalışsın
         public async Task<IActionResult> Index()
         {
             IEnumerable<Product> model = await _serviceProduct.GetAllAsync(p=> p.Isactive);
