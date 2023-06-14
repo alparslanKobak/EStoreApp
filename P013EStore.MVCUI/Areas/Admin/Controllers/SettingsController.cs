@@ -18,10 +18,10 @@ namespace P013EStore.MVCUI.Areas.Admin.Controllers
         }
 
         // GET: SettingsController
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-
-            return View();
+            var model = await _service.GetAllAsync();
+            return View(model);
         }
 
         // GET: SettingsController/Details/5
@@ -39,16 +39,33 @@ namespace P013EStore.MVCUI.Areas.Admin.Controllers
         // POST: SettingsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(Setting collection, IFormFile? Logo, IFormFile? Favicon)
         {
             try
             {
+                if (Logo is not null)
+                {
+                    collection.Logo = await FileHelper.FileLoaderAsync(Logo);
+                }
+                   
+
+                
+
+                if (Favicon is not null)
+                {
+                    collection.Logo = await FileHelper.FileLoaderAsync(Favicon);
+
+                }
+
+                await _service.AddAsync(collection);
+                await _service.SaveAsync();
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception e)
             {
-                return View();
+                ModelState.AddModelError("","Hata Oluştu : " + e.Message);
             }
+                return View();
         }
 
         // GET: SettingsController/Edit/5
@@ -64,10 +81,26 @@ namespace P013EStore.MVCUI.Areas.Admin.Controllers
         // POST: SettingsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, Setting collection, IFormFile? Favicon, IFormFile? Logo)
+        public async Task<ActionResult> Edit(int id, Setting collection, IFormFile? Favicon, IFormFile? Logo, bool? logoyuSil, bool? faviconuSil)
         {
             try
             {
+                // Logoları ve Favicon silme talebini karşıla
+
+                if (logoyuSil != null && collection.Logo != null)
+                {
+                    FileHelper.FileRemover(collection.Logo);
+                }
+
+                if (faviconuSil != null && collection.Favicon != null)
+                {
+                    FileHelper.FileRemover(collection.Favicon);
+                }
+
+                // Logo ve Favicon atama noktası
+
+                // Eğer dosya yükleme talebi var ise yanlışlıkla sil butonuna dahi tıklansa, ilgili dosya yüklemesi başlasın.
+
                 if (Logo != null)
                 {
                     collection.Logo = await FileHelper.FileLoaderAsync(Logo);
@@ -82,31 +115,52 @@ namespace P013EStore.MVCUI.Areas.Admin.Controllers
                 await _service.SaveAsync();
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                ModelState.AddModelError("", "Hata Oluştu : " + e.Message);
             }
+            
+            return View(collection);
         }
 
         // GET: SettingsController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int? id)
         {
-            return View();
+            if (id is not null)
+            {
+                return View(await _service.FindAsync(id.Value));
+            }
+            return RedirectToAction(nameof(Index),"Settings");
         }
 
         // POST: SettingsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, Setting collection)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var ayarlar = await _service.GetAllAsync();
+
+                if (ayarlar.Count >1)
+                {
+                    _service.Delete(collection);
+                    await _service.SaveAsync();
+                }
+                else
+                {
+                    TempData["Message"] = "<div class='alert alert-danger' >Kayıt Silinemedi! Sistemde en az 1 adet ayar bulunmalıdır.</div>";
+                }
+               // Eğer veri tabanındaki ayar nesnesi sayısı 1 ise silme işlemi gerçekleşmesin.
+                    return RedirectToAction(nameof(Index));
+                
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                ModelState.AddModelError("", "Hata Oluştu : " + e.Message);
             }
+
+            return View(collection);
         }
     }
 }

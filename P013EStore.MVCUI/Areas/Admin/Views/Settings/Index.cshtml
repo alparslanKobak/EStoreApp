@@ -1,13 +1,13 @@
-﻿@model IEnumerable<P013EStore.Core.Entities.Setting>
+﻿@model IEnumerable<Setting>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Ayarlar";
 }
 
-<h1>Index</h1>
+
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-outline-primary" asp-action="Create">Yeni Ayar Oluştur.</a>
 </p>
 <table class="table">
     <thead>
@@ -73,15 +73,21 @@
                 @Html.DisplayFor(modelItem => item.Password)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Favicon)
+                    @if (item.Favicon != null)
+                    {
+                        <img src="/Img/@Html.DisplayFor(modelItem => item.Favicon)" height="100" alt="" />
+                    }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Logo)
+                   @if (item.Logo != null)
+                    {
+                        <img src="/Img/@Html.DisplayFor(modelItem => item.Logo)" height="100" alt="" />
+                    } 
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Düzenle</a> |
+
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Sil</a>
             </td>
         </tr>
 }

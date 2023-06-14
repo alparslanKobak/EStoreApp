@@ -13,6 +13,8 @@
         <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Logo" />
+            <input type="hidden" asp-for="Favicon" />
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
@@ -20,7 +22,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -54,15 +56,61 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
+
+                <img src="@Model.Favicon" height="50" alt="" />
+
+                @if (!string.IsNullOrEmpty(Model.Favicon))
+                {
+                    <img src="/Img/@Model.Favicon" width="100" height="70" alt="" />
+                    <br />
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            @Html.CheckBox("faviconuSil") Favicon Sil
+                        </label>
+                    </div>
+                }
                 <label asp-for="Favicon" class="control-label"></label>
-                <input asp-for="Favicon" class="form-control"  type="file"/>
+                <input asp-for="Favicon" class="form-control" type="file" />
                 <span asp-validation-for="Favicon" class="text-danger"></span>
             </div>
             <div class="form-group">
+
+
+                <img src="@Model.Logo" height="50" alt="" />
+
+                @if (!string.IsNullOrEmpty(Model.Logo))
+                {
+                    <img src="/Img/@Model.Logo" width="100" height="70" alt="" />
+                    <br />
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            @Html.CheckBox("logoyuSil") Logo Sil
+                        </label>
+                    </div>
+                }
+
                 <label asp-for="Logo" class="control-label"></label>
                 <input asp-for="Logo" class="form-control" type="file" />
+
                 <span asp-validation-for="Logo" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                
+
+                <textarea asp-for="Address" class="form-control"></textarea>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="MapCode" class="control-label"></label>
+                <textarea asp-for="MapCode" class="form-control"></textarea>
+                <span asp-validation-for="MapCode" class="text-danger"></span>
+            </div>
+
+
             <div class="form-group">
                 <input type="submit" value="Kaydet" class="btn btn-primary" />
             </div>

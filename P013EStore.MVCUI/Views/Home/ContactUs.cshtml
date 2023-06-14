@@ -1,13 +1,22 @@
-﻿@model Contact
+﻿@using P013EStore.Service.Abstract;
+@model Contact
+@inject IService<Setting> _serviceSetting
 
 @{
+
+    // Inject Yöntemi ile Önyüzde istediğimiz dataya ulaşabiliriz.
+
     ViewData["Title"] = "İletişim";
+
+    var settings = await _serviceSetting.GetAllAsync();
+
+    var setting = settings.FirstOrDefault();
 }
 
 
 
 <div class="row">
-    
+
     <div class="col-md-4">
         <h4>Bize Ulaşın</h4>
         <hr />
@@ -44,13 +53,20 @@
         </form>
     </div>
 
-    <div class="col-md-4" >
+    <div class="col-md-4">
         <h4> Adres Bilgilerimiz </h4>
         <hr />
-       <table>
+        <table>
             <tr>
                 <td>Adres</td>
-                <td> <address> : Halep Mahallesi, Şam Sokak, Lazkiye/Ürdünbul </address></td>
+                <td>
+                    <address>
+                        : @if (setting is not null)
+                        {
+                            @setting.Address
+                        }
+                    </address>
+                </td>
             </tr>
             <tr>
                 <td>Telefon</td>
@@ -60,15 +76,15 @@
                 <td>Email</td>
                 <td>: ElTahrir@Idlib.com</td>
             </tr>
-       </table>
+        </table>
 
     </div>
 
-    <div class="col-md-4" >
+    <div class="col-md-4">
 
         <h4>Harita Bilgilerimiz</h4>
         <hr />
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12964.374206296905!2d35.780303369141066!3d35.674698409598165!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1526a4712d2d3423%3A0x1ceae79431225331!2zQnVyw6cgxLBzbGFtLCBTdXJpeWU!5e0!3m2!1str!2sro!4v1685390537458!5m2!1str!2sro" width="400" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        @Html.Raw(setting.MapCode)
 
     </div>
 

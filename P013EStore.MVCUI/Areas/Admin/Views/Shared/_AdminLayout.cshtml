@@ -33,6 +33,8 @@
                     <li><a class="dropdown-item" href="#!" target="_blank">Siteyi Önizle</a></li>
 
                     <li><a class="dropdown-item" asp-area="Admin" asp-controller="Settings">Ayarlar</a></li>
+
+                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Logs">Log Kayıtları</a></li>
                   
                     <li><hr class="dropdown-divider" /></li>
                     <li><a class="dropdown-item" href="/Logout">Çıkış</a></li>
@@ -47,6 +49,7 @@
                 <div class="container-fluid px-4">
 
                     <h1 class="mt-4">@ViewData["Title"]</h1>
+                    @Html.Raw(TempData["Message"])
                     @RenderBody()
                    
                 </div>

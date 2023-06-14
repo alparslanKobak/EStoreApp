@@ -23,6 +23,10 @@ namespace P013EStore.Data.Configurations
             builder.Property(x => x.UserName).HasMaxLength(50);
 
             builder.Property(x => x.Password).HasMaxLength(50);
+
+            builder.Property(x => x.Address).HasMaxLength(200);
+
+            builder.Property(x => x.MapCode).HasMaxLength(500);
         }
     }
 }

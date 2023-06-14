@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using P013EStore.Data;
 
@@ -11,9 +12,11 @@ using P013EStore.Data;
 namespace P013EStore.Data.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20230614171008_Hata_giderildi")]
+    partial class Hata_giderildi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,13 +80,13 @@ namespace P013EStore.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreateDate = new DateTime(2023, 6, 14, 21, 45, 43, 839, DateTimeKind.Local).AddTicks(2443),
+                            CreateDate = new DateTime(2023, 6, 14, 20, 10, 8, 627, DateTimeKind.Local).AddTicks(5499),
                             Email = "info@P013EStore.com",
                             IsAdmin = true,
                             Isactive = true,
                             Name = "Admin",
                             Password = "123",
-                            UserGuid = new Guid("203eb845-f705-4e95-af35-2c1af34856b1"),
+                            UserGuid = new Guid("88cfaea9-ab9b-4fde-9a40-8fe12589ed8f"),
                             UserName = "Admin"
                         });
                 });
@@ -321,10 +324,6 @@ namespace P013EStore.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -343,10 +342,6 @@ namespace P013EStore.Data.Migrations
                     b.Property<string>("MailServer")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("MapCode")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Password")
                         .HasMaxLength(50)

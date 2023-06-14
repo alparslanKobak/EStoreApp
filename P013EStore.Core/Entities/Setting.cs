@@ -16,7 +16,7 @@ namespace P013EStore.Core.Entities
         [Display(Name = "Site Başlık")]
         public string? Title { get; set; }
 
-        [Display(Name = "Site Açıklama")]
+        [Display(Name = "Site Açıklama"), DataType(DataType.MultilineText)]
         public string? Description { get; set; }
 
 
@@ -36,8 +36,16 @@ namespace P013EStore.Core.Entities
         [Display(Name = "Mail Şifre")]
         public string? Password { get; set; }
 
+        [Display(Name = "Site İkonu ")]
         public string? Favicon { get; set; }
 
+        [Display(Name = "Site Logosu")]
         public string? Logo { get; set; }
+
+        [Display(Name = "Firma Adresi"), DataType(DataType.MultilineText)]
+        public string? Address { get; set; }
+
+        [Display(Name = "Firma Harita Kodu"), DataType(DataType.MultilineText)]
+        public string? MapCode { get; set; }
     }
 }
