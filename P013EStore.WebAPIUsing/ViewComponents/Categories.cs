@@ -16,7 +16,7 @@ namespace P013EStore.WebAPIUsing.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await _httpClient.GetFromJsonAsync<List<Categories>>(_apiAdres);
+            var model = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdres);
             return View(model);
         }
 

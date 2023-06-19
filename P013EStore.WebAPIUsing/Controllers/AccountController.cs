@@ -81,7 +81,7 @@ namespace P013EStore.WebAPIUsing.Controllers
                 if (ModelState.IsValid)
                 {
 
-                    var kullanici = users.Any(x => x.Email == appUser.Email);
+                    var kullanici = users.FirstOrDefault(x => x.Email == appUser.Email);
 
                     if (kullanici != null)
                     {

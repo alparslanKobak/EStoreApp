@@ -49,7 +49,7 @@ namespace P013EStore.MVCUI.Controllers
             return View();
         }
         [Route("iletisim")]
-        public async Task<IActionResult> ContactUs()
+        public IActionResult ContactUs()
         {
             //var model = await _serviceSetting.GetAllAsync();
 
